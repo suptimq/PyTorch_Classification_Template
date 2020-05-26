@@ -1,0 +1,17 @@
+# pycache
+__pycache__
+
+# datasets
+datasets/*
+
+# exception to the rule
+!datasets/example 
+
+# logs
+logs/log*
+
+# figures
+figures/*.png
+
+# model params
+models/*model*
