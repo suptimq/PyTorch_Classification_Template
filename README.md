@@ -120,7 +120,7 @@ python /{your_path}/run.py          \
         --cuda_device 0
 ```
 
-## Inference
+### Inference
 
 Inference can be easily done by running **inference.py** file as follows:
 
