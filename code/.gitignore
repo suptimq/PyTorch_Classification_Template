@@ -1,0 +1,11 @@
+# pycache
+__pycache__
+
+# logs
+logs/
+
+# figures
+runs/
+
+# model params
+models/
