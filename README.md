@@ -124,14 +124,14 @@ python /{your_path}/run.py          \
 
 Inference can be easily done by running **inference.py** file as follows:
 
-```console
-Python inference.py
-```
-
-It is going to generate a CSV file indicating the label for each of the testing data
-
 ```Python
-# Model eval
-model.eval()
-results = inference(model, label_dict_reverse, test_data, saved_path, logger)
+#! inference.sh
+
+python /{path}/inference.py                   \
+        --modelType Net                       \
+        --loading_epoch 190                   \
+        --timestamp Jun04_18-18-46            \
+        --cuda                                \
+        --num_sample 1000
 ```
+
