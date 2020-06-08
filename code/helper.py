@@ -5,6 +5,10 @@ import socket
 from datetime import datetime
 import logging
 
+import torch.optim as optim
+
+from model import Net
+
 
 def set_logging(log_file, log_level=logging.DEBUG):
     """
@@ -49,3 +53,33 @@ def timeSince(since):
     now = time.time()
     s = now - since
     return '%s' % (asMinutes(s))
+
+
+def init_model(model):
+    m = None
+    outdim = model['outdim']
+    m = Net(outdim)
+
+    assert m != None, 'Model Not Initialized'
+    return m
+
+
+def init_optimizer(optimizer, model):
+    opt = None
+    lr = optimizer['lr']
+    weight_decay = optimizer['weight_decay']
+    parameters = model.parameters()
+    if optimizer['optim_type'] == 'Adam':
+        opt = optim.Adam(parameters,
+                         lr=lr,
+                         weight_decay=weight_decay)
+    elif optimizer['optim_type'] == 'Adadelta':
+        opt = optim.Adadelta(parameters,
+                             weight_decay=weight_decay)
+    else:
+        opt = optim.RMSprop(parameters,
+                            lr=lr,
+                            weight_decay=weight_decay)
+
+    assert opt != None, 'Optimizer Not Initialized'
+    return opt

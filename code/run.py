@@ -9,12 +9,12 @@ import tensorboard
 from helper import getTimestamp, getHostName, makeSubdir, logInfoWithDot, set_logging
 
 from dataloader import Dataset
-from solver import MnistSolver
+from solver import MNISTSolver
 
 parser = argparse.ArgumentParser()
 # Model
 parser.add_argument('--modelType',
-                    default='GoogleNet',
+                    default='Net',
                     help='model used for training')
 parser.add_argument('--resume', action='store_true', help='resume training')
 parser.add_argument('--resume_timestamp', help='timestamp to resume')
@@ -174,7 +174,7 @@ test_transform = tvtrans.Compose([
     tvtrans.Normalize((0.5, ), (0.5, ))
 ])
 
-# Get Mnist dataset
+# Get MNIST dataset
 train_ds = Dataset(dataset_path,
                    train=True,
                    transform=train_augmentation)
@@ -191,5 +191,5 @@ test_dl = torch.utils.data.DataLoader(test_ds,
 
 dataloader = {'train': train_dl, 'valid': test_dl}
 
-solver = MnistSolver(model, dataloader, optimizer, scheduler, logger, writer)
+solver = MNISTSolver(model, dataloader, optimizer, scheduler, logger, writer)
 solver.forward()

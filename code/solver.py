@@ -8,8 +8,7 @@ import torch.optim as optim
 from torchvision import models
 from torch.utils.tensorboard import SummaryWriter
 
-from model import Net
-from helper import makeSubdir, logInfoWithDot, timeSince
+from helper import makeSubdir, logInfoWithDot, timeSince, init_model, init_optimizer
 
 
 class Solver():
@@ -23,7 +22,7 @@ class Solver():
             logger:        Logger params
             writer:        Tensorboard writer params
         """
-        self.model = self.init_model(model)
+        self.model = init_model(model)
         self.loading_epoch = model['loading_epoch']
         self.total_epochs = model['total_epochs']
         self.model_path = model['model_path']
@@ -57,7 +56,7 @@ class Solver():
         self.criterion = nn.CrossEntropyLoss()
 
         # Optimizer
-        self.optimizer = self.init_optimizer(optimizer)
+        self.optimizer = init_optimizer(optimizer, self.model)
         if optimizer['resume']:
             self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
             # Log information
@@ -82,33 +81,6 @@ class Solver():
 
         # Timer
         self.start_time = time.time()
-
-    def init_model(self, model):
-        m = None
-        outdim = model['outdim']
-        m = Net(outdim)
-
-        assert m != None, 'Model Not Initialized'
-        return m
-
-    def init_optimizer(self, optimizer):
-        opt = None
-        lr = optimizer['lr']
-        weight_decay = optimizer['weight_decay']
-        if optimizer['optim_type'] == 'Adam':
-            opt = optim.Adam(self.model.parameters(),
-                             lr=lr,
-                             weight_decay=weight_decay)
-        elif optimizer['optim_type'] == 'Adadelta':
-            opt = optim.Adadelta(self.model.parameters(),
-                                 weight_decay=weight_decay)
-        else:
-            opt = optim.RMSprop(self.model.parameters(),
-                                lr=lr,
-                                weight_decay=weight_decay)
-
-        assert opt != None, 'Optimizer Not Initialized'
-        return opt
 
     def count_correct(self, out, yb):
         preds = torch.argmax(out, dim=1)
@@ -151,7 +123,7 @@ class Solver():
                 timeSince(self.start_time)))
 
 
-class MnistSolver(Solver):
+class MNISTSolver(Solver):
     def train_one_epoch(self, ep, log_interval=50):
         self.model.train()
 

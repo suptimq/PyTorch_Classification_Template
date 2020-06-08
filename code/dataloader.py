@@ -1,12 +1,13 @@
 import os
 from pathlib import Path
-import torch
-import torchvision
 import h5py
 import numpy as np
 import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
+
+import torch
+import torchvision.transforms as tvtrans
 
 import pdb
 
@@ -64,8 +65,11 @@ def test_class():
         'test_filepath': 'test.hdf5'
     }
 
-    transform = torchvision.transforms.Compose([
-        torchvision.transforms.ToTensor()
+    transform = tvtrans.Compose([
+        tvtrans.ToPILImage(),
+        tvtrans.RandomHorizontalFlip(p=0.5),
+        tvtrans.RandomVerticalFlip(p=0.5),
+        tvtrans.ToTensor()
     ])
 
     train_ds = Dataset(dataset_path, train=True, transform=transform)
